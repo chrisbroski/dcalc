@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>D&amp;D Character Calculator</title>
+    <link rel="stylesheet" type="text/css" href="screen.css">
+    <link rel="stylesheet" type="text/css" href="print.css" media="print">
+
+<body onload="choiceInit()">
+<form method="post" action="" name="form1">
+<div id="choices">
+<div id="buttons">
+  <input type="button" name="ffLink" value="Save" onclick="get_link()">
+  <input type="button" value="Print" onclick="print()" id="ptp">
+  <input type="button" name="ffReroll" value="Re-roll" onclick="roll_stats(1)">
+  <input type="button" name="ffClear" value="Clear All" onclick="location=location.href.substring(0,location.href.indexOf('?'))">
+</div>
+<div>Name <input type="text" name="ffName" size="18" onkeyup="get_name()" maxlength="35">
+</div>
+<div>Race <select name="ffRace" id="ffRace" onchange="recalc_all(3)"></select> </div>
+<div>Class <select name="ffClass" id="ffClass" onchange="recalc_all(2)"></select>
+Lvl <select name="ffLevel" onchange="recalc_all(3)">
+  <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+  <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+  <option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
+  <option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option></select>
+</div>
+<div>
+Alignment
+<select name="ffAlign1" onchange="dspAll(1)">
+  <option value=""></option>
+  <option value="Lawful">Lawful</option>
+  <option value="Neutral">Neutral</option>
+  <option value="Chaotic">Chaotic</option>
+</select>
+<select name="ffAlign2" onchange="dspAll(1)">
+  <option value=""></option>
+  <option value="Good">Good</option>
+  <option value="Neutral">Neutral</option>
+  <option value="Evil">Evil</option>
+</select>
+</div>
+<div>
+Deity <select name="ffDeity" id="ffDeity" onchange="dspAll(1)"></select>
+</div>
+<div id="dStats" style="float:left;margin-right:4px;"></div>
+<div id="statBloc">
+<div><label>Sex</label><select name="ffSex" onchange="stat_race(3)"><option value=""></option><option value="M">Male</option><option value="F">Female</option></select> </div>
+<div><label>Height</label><input type="text" name="ffHeight" onkeyup="height_dsp()"> in. </div>
+<div><label>Weight</label><input type="text" name="ffWeight" onkeyup="quick_dsp('Weight')"> lbs </div>
+<div><label>Age</label><input type="text" name="ffAge" onkeyup="quick_dsp('Age')"> </div>
+<div><label>Hair</label><input type="text" name="ffHair" onkeyup="quick_dsp('Hair')"> </div>
+<div><label>Eyes</label><input type="text" name="ffEyes" onkeyup="quick_dsp('Eyes')"> </div>
+</div>
+<div style="clear:left">Armor <select name="ffArmor" id="ffArmor" onchange="recalc_all(1)"></select></div>
+<div>Shield <select name="ffShield" id="ffShield" onchange="recalc_all(1)"></select></div>
+<div>Weapon <select name="ffWeapon1" onchange="weapon('1')"></select></div>
+<div>Weapon <select name="ffWeapon2" onchange="weapon('2')"></select></div>
+<div>Weapon <select name="ffWeapon3" onchange="weapon('3')"></select></div>
+<div>
+Skill Points: <input type="text" style="width:20px" name="ffSkillP" value="0" readonly="readonly">
+Spent: <input type="text" style="width:20px" name="ffSkillS" value="0" readonly="readonly">
+Remain: <input type="text" style="width:20px" name="ffSkillT" value="0" readonly="readonly">
+</div>
+<div id="Skills">
+<span id="lSkills"></span>
+<input type="button" onclick="train_skill(1, 1)" value="+" class="skBut">
+<input type="button" onclick="train_skill(-1, 1)" value="-" class="skBut">
+</div>
+<div id="dFeats"></div>
+<div id="cLang">
+  Choose <span id="nBonusLang"></span> bonus language<span id="pBonusLang"></span>:
+  <span id="lBonusLang"></span>
+</div>
+<div id="debug" style="height:100px;overflow:auto;border:1px solid #999;clear:both;">Debug Info</div>
+</div>
+<!-- Start stats table -->
+<div id="stats">
+<table class="mainCont"><tr><td>
+<h1><span id="dName"></span></h1></td>
+<td><h2><span id="dSex"></span><span id="dRace"></span><span id="dClass"></span></h2></td></tr>
+<tr><td><div class="statRow"><span class="tS">HP:</span> <span id="dHP"></span> &nbsp; <span class="tS">Init:</span> <span id="dInit"></span> &nbsp;
+<span class="tS">Spent:</span> <span id="dGp"></span> &nbsp; <span class="tS">Speed:</span> <span id="dSpeed"></span>/<span id="dRun"></span></div>
+<div class="statRow"><span class="tS">Med Load:</span> <span id="dMLoad"></span> <span class="tS">Hvy Load:</span> <span id="dHLoad"></span></div>
+<div class="statRow"><span class="tS">Height:</span> <span id="dHeight"></span> &nbsp;<span class="tS">Weight:</span> <span id="dWeight"></span>lbs &nbsp;<span class="tS">Carried:</span> <span id="dEnc"></span>lbs</div>
+<table class="ModTable" id="CA">
+  <thead><tr><td>Abilities</td><td>Base</td><td>Racial</td><td>Total</td><td>Mod</td></tr></thead>
+  <tr><td class="tL">Str</td><td><span id="dBaseStr"></span></td><td><span id="dRaceStr"></span></td><td><span id="dTotStr"></span></td><td><span id="dModStr"></span></td></tr>
+  <tr><td class="tL">Dex</td><td><span id="dBaseDex"></span></td><td><span id="dRaceDex"></span></td><td><span id="dTotDex"></span></td><td><span id="dModDex"></span></td></tr>
+  <tr><td class="tL">Con</td><td><span id="dBaseCon"></span></td><td><span id="dRaceCon"></span></td><td><span id="dTotCon"></span></td><td><span id="dModCon"></span></td></tr>
+  <tr><td class="tL">Int</td><td><span id="dBaseInt"></span></td><td><span id="dRaceInt"></span></td><td><span id="dTotInt"></span></td><td><span id="dModInt"></span></td></tr>
+  <tr><td class="tL">Wis</td><td><span id="dBaseWis"></span></td><td><span id="dRaceWis"></span></td><td><span id="dTotWis"></span></td><td><span id="dModWis"></span></td></tr>
+  <tr><td class="tL">Cha</td><td><span id="dBaseCha"></span></td><td><span id="dRaceCha"></span></td><td><span id="dTotCha"></span></td><td><span id="dModCha"></span></td></tr>
+</table>
+<span id="dSk"></span>
+</td>
+<!-- Start right column -->
+<td style="padding-left:4px">
+<div class="statRow"><span class="tS">ECL:</span> <span id="dEcl"></span> &nbsp;<span class="tS">Alignment:</span> <span id="dAlign1"></span>&nbsp;<span id="dAlign2"></span> &nbsp;<span class="tS">Diety:</span> <span id="dDeity"></span></div>
+<div class="statRow" id="rLang"><span class="tS">Languages:</span> <span id="dLang"></span></div>
+<div class="statRow"><span class="tS">Age:</span> <span id="dAge"></span> &nbsp;<span class="tS">Hair:</span> <span id="dHair"></span> &nbsp;<span class="tS">Eyes:</span> <span id="dEyes"></span></div>
+<table class="ModTable" id="ST">
+  <thead><tr><td>Saving Throws</td><td>Base</td><td>Misc</td><td>Class</td><td>Total</td></tr></thead>
+  <tr><td class="tL">Fortitude</td><td><span id="stFortB"></span></td><td><span id="stFortR"></span></td><td><span id="stFortC"></span></td><td><span id="stFortT"></span></td></tr>
+  <tr><td class="tL">Reflex</td><td><span id="stRefB"></span></td><td><span id="stRefR"></span></td><td><span id="stRefC"></span></td><td><span id="stRefT"></span></td></tr>
+  <tr><td class="tL">Will</td><td><span id="stWillB"></span></td><td><span id="stWillR"></span></td><td><span id="stWillC"></span></td><td><span id="stWillT"></span></td></tr>
+  <tr><td class="tL">Misc</td><td colspan="4"><span id="OtherSave"></span></td></tr>
+</table>
+<table class="ModTable" id="AC">
+  <thead><tr><td>Type</td><td>Arm</td><td>Shld</td><td>Dex</td><td>Size</td><td>Mnk</td><td>AC</td><td>Tch</td><td>Flat</td></tr></thead>
+  <tr><td><span id="dAcType"></span></td><td><span id="dAcArmor"></span></td><td><span id="dAcShield"></span></td>
+  <td><span id="dAcMod"></span></td><td><span id="dAcSize"></span></td><td><span id="dAcMonk"></span></td>
+  <td><span id="dAcTot"></span></td><td><span id="dAcTouch"></span></td><td><span id="dAcFlat"></span></td></tr>
+  <tr><td class="tL">Armor</td><td colspan="8"><span id="ArmorName"></span></td></tr>
+  <tr><td class="tL">Max Dex+</td><td><span id="dAcMaxDex"></span></td>
+  <td class="tL" colspan="2">AC Check</td><td><span id="dAcCheck"></span></td>
+  <td class="tL" colspan="2">Spell Fail</td><td colspan="2"><span id="dAcSpell"></span>%</td></tr>
+  <tr><td class="tL">Shield</td>
+  <td colspan="8"><span id="ArmorShield"></span></td></tr>
+  <tr><td class="tL">Max Dex+</td><td><span id="dSAcMaxDex"></span></td>
+  <td class="tL" colspan="2">AC Check</td><td><span id="dSAcCheck"></span></td>
+  <td class="tL" colspan="2">Spell Fail</td><td colspan="2"><span id="dSAcSpell"></span>%</td></tr>
+  <tr><td class="tL">Total</td>
+  <td colspan="8"><span id="ArmorAll"></span></td></tr>
+  <tr><td class="tL">Max Dex+</td><td><span id="dTAcMaxDex"></span></td>
+  <td class="tL" colspan="2">AC Check</td><td><span id="dTAcCheck"></span></td>
+  <td class="tL" colspan="2">Spell Fail</td><td colspan="2"><span id="dTAcSpell"></span>%</td></tr>
+</table>
+<div id="dWpn1"></div>
+<div id="dWpn2"></div>
+<div id="dWpn3"></div>
+<table class="ModTable" id="SA">
+  <thead><tr><td><div id="dSa">Character and Racial Abilities </div></td></tr></thead>
+  <tr><td><span id="specAbilities">&nbsp;</span></td></tr>
+</table>
+</td></tr></table>
+<span style="font-size:10px;"><a href="http://www.protonfish.com/">www.protonfish.com</a> © 2005-2007 <a href="http://www.opengamingfoundation.org/ogl.html">OGL</a></span>
+</div>
+<div id="debug"></div>
+</form>
+
+<script src="dat.js"></script>
+<script src="util.js"></script>
+<script src="main.js"></script>

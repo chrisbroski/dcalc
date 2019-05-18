@@ -1,0 +1,30 @@
+h1 {margin:0; font-size:18px;}
+h2 {margin:0 0 0 3px;font-weight:normal; font-size:18px;}
+div.statRow {padding-bottom:1px;}
+table {border-collapse:collapse;}
+td {vertical-align:top;}
+thead {font-weight:bold;background:#ddd;}
+td.tL {font-weight:bold;}
+table.ModTable {margin-bottom:4px;width:340px;}
+body {font-family:arial,sans-serif;font-size:11px;background:#fff;width:80em;}
+#AcType {width:60px;}
+ul {text-align:left; margin: 0 0 0 10px;padding-left:10px;}
+#CA, #tSkl {width:253px;}
+#W1, #W2, #W3, #AC, #SA, #ST, #rLang {width:340px;}
+table.ModTable td {text-align:center;border:1px solid #000;padding:2px;vertical-align:middle}
+td.tSpacer {width:336px;border:none;height:4px;}
+tr.tL td, span.tS {font-weight:bold}
+#tSkl {font-size:10px}
+#saTable {width:335px}
+#saTable td {border:none;padding:0;vertical-align:top;}
+input, select {margin-top:3px;}
+input.skBut {width:20px;}
+#choices {float:right; border:1px solid #999; padding:5px;background:#eee;width:24em;}
+#buttons {text-align:center;padding-bottom:4px;}
+#buttons input {margin-right:4px;}
+#stats {float:left;}
+#debug {display:none;}
+#dStats input {width:25px;}
+#statBloc input, #statBloc select {width:65px;}
+#statBloc label {float:left;width:40px;margin-top:8px;}
+select.sbFt {margin-left:20px;}

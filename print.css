@@ -1,0 +1,8 @@
+body {margin:0;padding:0;}
+body, td {font-family:serif;font-size:11pt;}
+#CA, #tSkl {width:230pt;}
+#W1, #W2, #W3, #AC, #SA, #ST {width:270pt;}
+#dSa {width: 266pt;}
+#tSkl td {font-size:10pt}
+#choices, #debug {display: none;}
+table.ModTable {width:270pt}
